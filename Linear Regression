@@ -1,0 +1,58 @@
+import pandas as pd 
+import numpy as np 
+import sklearn
+import matplotlib.pyplot as pyplot
+import pickle
+from sklearn import linear_model
+from sklearn.utils import shuffle
+from matplotlib import style
+
+data = pd.read_csv("forestfires.csv", sep=",")
+print(data.head())
+
+data = data[["temp", "rain", "rain", "area"]]
+print(data.head())
+
+predict = "area"
+x= np.array(data.drop(predict, axis=1))
+y = np.array(data[predict])
+
+x_train, x_test,  y_train, y_test = sklearn.model_selection.train_test_split(x,y,test_size=0.1)
+
+linear = linear_model.LinearRegression()
+linear.fit(x_train, y_train)
+acc = linear.score(x_test ,y_test)
+print(acc)
+
+with open("studentmodel.pickle", "wb") as f:
+    pickle.dump(linear ,f)
+pickle_in = open("studentmodel.pickle" , "rb")
+linear = pickle.load(pickle_in)
+
+print('coefficient: \n' , linear.coef_)
+print('Intercept: \n', linear.intercept_)
+
+predictions = linear.predict(x_test)
+for x in range(len(predictions)):
+    print(predictions[x], x_test[x], y_test[x])
+
+
+
+# Plot the data
+style.use("ggplot")
+p = "temp"
+pyplot.scatter(data[p], data["area"], color='blue', label='Actual Data')
+
+# Plot regression line (only for temp as an example)
+slope = linear.coef_[0]  # Coefficient for temp
+intercept = linear.intercept_
+
+# Use the min and max values of temp to create a regression line
+x_range = np.linspace(data[p].min(), data[p].max(), 100)
+y_range = slope * x_range + intercept
+pyplot.plot(x_range, y_range, color='red', label='Regression Line')
+
+pyplot.xlabel(p)
+pyplot.ylabel("Area burnt")
+pyplot.legend()
+pyplot.show()
