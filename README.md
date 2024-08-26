@@ -1,8 +1,6 @@
 # ML_Project
 
-# Foobar
-
-Foobar is a Python library for dealing with word pluralization.
+This project 
 
 ## Installation
 
