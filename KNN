@@ -1,0 +1,53 @@
+# Libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
+
+# Load the dataset
+data = pd.read_csv("car.data")
+
+# Check the data types
+print(data.dtypes)
+
+# Encode categorical features
+le = LabelEncoder()
+for column in data.columns:
+    data[column] = le.fit_transform(data[column])
+
+# Print the first few rows to verify encoding
+print(data.head())
+
+# Split the dataset into features and labels
+X = data.iloc[:, :-1]  # All columns except the last one (features)
+y = data.iloc[:, -1]   # The last column (target)
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Feature scaling
+sc_x = StandardScaler()
+X_train = sc_x.fit_transform(X_train)
+X_test = sc_x.transform(X_test)
+
+# Determine the optimal K value
+import math
+k_value = int(math.sqrt(len(y_test)))
+print(f"Optimal K value (approx): {k_value}")
+
+# Define the model: Init K-NN
+classifier = KNeighborsClassifier(n_neighbors=11, p=2, metric='euclidean')
+classifier.fit(X_train, y_train)
+
+# Predict the test results
+y_pred = classifier.predict(X_test)
+
+# Evaluate the model
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", cm)
+print("F1 Score:", f1_score(y_test, y_pred, average='weighted'))
+print("Accuracy Score:", accuracy_score(y_test, y_pred))
