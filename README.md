@@ -14,7 +14,7 @@ This repository contains two machine learning projectsm, as well as a complement
 ## Dependencies
 - **Jupyter Notebooks**
 - **Python**
-  - Libraries: `numpy`, `pandas`, `matplotlib`, `scikit-learn`
+- **Libraries:** `numpy`, `pandas`, `matplotlib`, `sklearn`, `pickle`
 
 ## Installation and Usage
 1. Ensure you have Python and Jupyter Notebooks installed on your system.
